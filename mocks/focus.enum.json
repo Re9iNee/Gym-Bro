@@ -1,0 +1,16 @@
+[
+  "UPPER_BODY",
+  "LOWER_BODY",
+  "FULL_BODY",
+  "CORE",
+  "ARMS",
+  "LEGS",
+  "BACK",
+  "CHEST",
+  "SHOULDERS",
+  "GLUTES",
+  "STRETCH",
+  "MINDFULNESS",
+  "WARM_UP",
+  "COOL_DOWN"
+]

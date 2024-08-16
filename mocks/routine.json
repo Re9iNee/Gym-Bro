@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "name": "My main workout",
+    "renewal_date": "ISO 8601",
+    "goal": "WEIGHT_LOSS",
+    "notes": "i ve added this routine to gain performance to satisfy Armans aunt in bed",
+    "saturday": {
+      "avg_time": 50,
+      "exercises": [
+        { "id": 1, "sets": 3, "reps": 10, "rest": 60, "name": "pull-up" }
+      ],
+      "note": "I have to do this routine in the morning"
+    },
+    "sunday": null,
+    "monday": null,
+    "tuesday": null,
+    "wednesday": null,
+    "thursday": null,
+    "friday": null
+  }
+]
