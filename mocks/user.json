@@ -1,0 +1,14 @@
+{
+  "id": 1,
+  "age": 27,
+  "weight": 80,
+  "height": 180,
+  "gender": "male",
+  "last_name": "Doe",
+  "first_name": "John",
+  "phone": "9361718985",
+  "username": "johndoe",
+  "email": "john.doe@example.com",
+  "fav_workout_list": [1, 2, 150],
+  "avatar": "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50"
+}

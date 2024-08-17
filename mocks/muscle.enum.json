@@ -1,25 +1,34 @@
 [
+  "NECK",
+
   "REAR_DELTS",
   "FRONT_DELTS",
   "LATERAL_DELTS",
+
   "TRAPS",
+
   "UPPER_CHEST",
-  "MIDDLE_CHEST",
   "LOWER_CHEST",
+  "MIDDLE_CHEST",
+
+  "LATS",
   "UPPER_BACK",
   "LOWER_BACK",
-  "LATS",
-  "TRICEPS",
+
   "BICEPS",
+  "TRICEPS",
   "FOREARMS",
+
   "ABS",
+  "V-Line",
   "OBLIQUES",
+
   "QUADS",
-  "HAMSTRINGS",
   "CALVES",
   "GLUTES",
-  "HIP_FLEXORS",
   "ADDUCTORS",
   "ABDUCTORS",
-  "NECK"
+  "HAMSTRINGS",
+
+  "HIP_FLEXORS"
 ]

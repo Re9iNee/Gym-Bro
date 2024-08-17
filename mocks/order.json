@@ -1,0 +1,8 @@
+{
+  "id": 1,
+  "price": 100,
+  "user_id": 1,
+  "status": "PAID",
+  "generated_routine_id": 1,
+  "order_date": "2021-06-01"
+}
