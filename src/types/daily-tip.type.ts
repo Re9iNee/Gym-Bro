@@ -10,9 +10,11 @@ export const dailyTipSchema = z.object({
   title: z.string(),
   summary: z.string(),
   content: z.string(),
+  isActive: z.boolean(),
   image_url: z.string().url(),
   video_url: z.string().url(),
   references: z.array(referencesSchema),
+  lastShownDate: z.string().date().nullable(),
 });
 
 export type DailyTip = z.infer<typeof dailyTipSchema>;
