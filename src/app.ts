@@ -1,5 +1,5 @@
 import express from "express";
-import dailyTipRouter from "./routes/daily-tip";
+import dailyTipRouter from "./routes/daily-tip.route";
 
 const app = express();
 app.get("/", (req, res) => {

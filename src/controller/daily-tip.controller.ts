@@ -1,20 +1,21 @@
 import { DailyTip } from "@prisma/client";
 
 export function selectDailyTip(dts: DailyTip[]): DailyTip {
-  let selected = dts.find((dt) => dt.lastShownDate === null);
+  let selected: DailyTip | undefined;
 
-  const earliestFirst = dts.sort((a, b) => {
-    const d = a.lastShownDate?.getTime();
-    const f = b.lastShownDate?.getTime();
+  selected = dts.find((dt) => dt.lastShownDate === null);
 
-    return Number(d) - Number(f);
-  });
+  const sortedDailyTips = earliestFirst(dts);
 
-  selected = { ...earliestFirst[0] };
-
-  if (!selected) {
-    selected = dts[Math.floor(Math.random() * dts.length)];
-  }
+  selected = { ...sortedDailyTips[0] };
 
   return selected;
 }
+
+// returns ["2020-01-01" , "2024-12-12"] => "2020-01-01"
+const earliestFirst = (dts: DailyTip[]): DailyTip[] => {
+  return dts.sort(
+    (a, b) =>
+      Number(a.lastShownDate?.getTime()) - Number(b.lastShownDate?.getTime())
+  );
+};

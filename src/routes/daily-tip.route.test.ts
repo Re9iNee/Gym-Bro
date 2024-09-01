@@ -1,11 +1,11 @@
 import request from "supertest";
 import app from "../app";
 
+import { describe, expect, it } from "vitest";
 import { dailyTips } from "../lib/placeholder-data";
 import { dailyTipSchema } from "../types/daily-tip.type";
-import { describe, expect, it } from "vitest";
 
-describe("/daily-tip", () => {
+describe("/daily-tip Routes", () => {
   describe("GET /daily-tip", () => {
     it("should return daily tip of the day", async () => {
       const response = await request(app).get("/daily-tip");
@@ -22,9 +22,5 @@ describe("/daily-tip", () => {
 
       expect(parsedResult.success).toBe(true);
     });
-  });
-
-  describe("dailyTip db", () => {
-    it.todo("should have only one active daily tip at the moment");
   });
 });
