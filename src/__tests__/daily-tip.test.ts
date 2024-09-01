@@ -3,6 +3,7 @@ import app from "../app";
 
 import { dailyTips } from "../lib/placeholder-data";
 import { dailyTipSchema } from "../types/daily-tip.type";
+import { describe, expect, it } from "vitest";
 
 describe("/daily-tip", () => {
   describe("GET /daily-tip", () => {

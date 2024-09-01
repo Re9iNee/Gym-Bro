@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "DailyTip" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
     "title" TEXT NOT NULL,
     "summary" TEXT NOT NULL,
     "content" TEXT NOT NULL,
@@ -8,6 +8,7 @@ CREATE TABLE "DailyTip" (
     "video_url" TEXT NOT NULL,
     "references" JSONB[],
     "lastShownDate" TIMESTAMP(3),
+    "isActive" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "DailyTip_pkey" PRIMARY KEY ("id")
 );

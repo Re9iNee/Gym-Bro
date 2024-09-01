@@ -1,5 +1,5 @@
 import { DailyTip } from "@prisma/client";
-import { prisma } from "./prisma";
+import prisma from "../database/prisma";
 
 export async function getTodayDailyTip(): Promise<DailyTip | null> {
   return await prisma.dailyTip.findFirst({
