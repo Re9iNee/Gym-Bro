@@ -15,7 +15,7 @@ model DailyTip {
   content       String
   image_url     String
   video_url     String
-  references    Json[]
+  references    Json
   lastShownDate DateTime?
   isActive      Boolean   @default(false)
 }

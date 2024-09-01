@@ -1,12 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 import prisma from "../database/__mocks__/prisma";
-import { getTodayDailyTip } from "./daily-tip.service";
-import { DailyTip } from "@prisma/client";
+import { createDailyTip, getTodayDailyTip } from "./daily-tip.service";
+import { DailyTip, Prisma } from "@prisma/client";
 
 vi.mock("../database/prisma");
 
-const successDailyTip: DailyTip = {
-  id: 1,
+const dtMockObject: Omit<DailyTip, "id"> = {
   isActive: true,
   title: "something",
   lastShownDate: null,
@@ -18,10 +17,21 @@ const successDailyTip: DailyTip = {
 };
 
 describe("DailyTip Service", () => {
-  it("gets the active todo from db", async () => {
-    prisma.dailyTip.findFirst.mockResolvedValue({ ...successDailyTip });
+  it("gets the active dailyTip from db", async () => {
+    prisma.dailyTip.findFirst.mockResolvedValue({ ...dtMockObject, id: 1 });
 
     const dailyTip = await getTodayDailyTip();
-    expect(dailyTip).toStrictEqual({ ...successDailyTip });
+
+    expect(dailyTip).toStrictEqual({ ...dtMockObject, id: 1 });
+  });
+
+  it("should create dailyTip", async () => {
+    prisma.dailyTip.create.mockResolvedValue({ ...dtMockObject, id: 1 });
+
+    const dailyTip = await createDailyTip(
+      JSON.parse(JSON.stringify(dtMockObject))
+    );
+
+    expect(dailyTip).toStrictEqual({ ...dtMockObject, id: 1 });
   });
 });

@@ -23,4 +23,8 @@ describe("/daily-tip", () => {
       expect(parsedResult.success).toBe(true);
     });
   });
+
+  describe("dailyTip db", () => {
+    it.todo("should have only one active daily tip at the moment");
+  });
 });
