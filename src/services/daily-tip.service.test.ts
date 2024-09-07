@@ -1,7 +1,7 @@
+import { DailyTip } from "@prisma/client";
 import { describe, expect, it, vi } from "vitest";
 import prisma from "../database/__mocks__/prisma";
 import { createDailyTip, getTodayDailyTip } from "./daily-tip.service";
-import { DailyTip, Prisma } from "@prisma/client";
 
 vi.mock("../database/prisma");
 

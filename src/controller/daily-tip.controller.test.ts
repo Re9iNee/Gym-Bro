@@ -45,4 +45,22 @@ describe("Daily Tip controller", () => {
 
     expect(selectedDT.lastShownDate).toStrictEqual(new Date("2020-01-01"));
   });
+
+  it("should return dailyTip if both lastShownDate are null", () => {
+    const selectedDT = selectDailyTip([
+      { ...dtsMockObject[0], lastShownDate: null },
+      { ...dtsMockObject[1], lastShownDate: null },
+    ]);
+
+    expect(selectedDT.lastShownDate).toBe(null);
+  });
+
+  it("should return dailyTip if both lastShownDate are same date", () => {
+    const selectedDT = selectDailyTip([
+      { ...dtsMockObject[0], lastShownDate: new Date("2020-01-01") },
+      { ...dtsMockObject[1], lastShownDate: new Date("2020-01-01") },
+    ]);
+
+    expect(selectedDT.lastShownDate).toStrictEqual(new Date("2020-01-01"));
+  });
 });
