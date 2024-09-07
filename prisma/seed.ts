@@ -1,7 +1,8 @@
-import { dailyTips } from "../src/lib/placeholder-data";
 import prisma from "../src/database/prisma";
+import { dailyTips } from "../src/lib/placeholder-data";
 
 async function main() {
+  await clearDB();
   await seedDailyTips();
 }
 
@@ -21,4 +22,14 @@ async function seedDailyTips() {
 
   const rows = await prisma.dailyTip.createMany({ data: formattedDTs });
   console.log(`🌱 Seeded ${rows.count} daily tips`);
+}
+
+async function clearDB() {
+  console.log("🛑 Clearing DB...");
+
+  const deletedDailyTip = prisma.dailyTip.deleteMany();
+
+  await prisma.$transaction([deletedDailyTip]);
+
+  console.log("✅ DB cleared!");
 }
