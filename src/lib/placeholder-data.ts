@@ -1,6 +1,6 @@
-import { DailyTip } from "@prisma/client";
+import { DailyTip as ServerDailyTip } from "@prisma/client";
 
-export const dailyTips: DailyTip[] = [
+export const dailyTips: ServerDailyTip[] = [
   {
     id: 1,
     title: "Why is pull up so hard?",
@@ -12,12 +12,12 @@ export const dailyTips: DailyTip[] = [
       "The pull-up is a bodyweight exercise that targets the muscles of the back and biceps. It is a challenging exercise that requires upper body strength and core stability.",
     isActive: true,
     lastShownDate: new Date(),
-    references: [
+    references: JSON.stringify([
       {
         title: "Oxford University",
         url: "https://www.oxfordreference.com/display/10.1093/acref/9780199891580.001.0001/acref-9780199891580-e-6390",
       },
-    ],
+    ]),
   },
   {
     id: 2,
@@ -31,12 +31,12 @@ export const dailyTips: DailyTip[] = [
       "The push-up is a bodyweight exercise that targets the muscles of the chest, shoulders, and triceps. It is a great exercise for building upper body strength and endurance.",
     isActive: false,
     lastShownDate: new Date("2021-01-01"),
-    references: [
+    references: JSON.stringify([
       {
         title: "Harvard Health",
         url: "https://www.health.harvard.edu/staying-healthy/push-ups-and-other-exercises",
       },
-    ],
+    ]),
   },
   {
     id: 3,
@@ -50,12 +50,12 @@ export const dailyTips: DailyTip[] = [
       "The best way to lose weight is to eat a healthy diet and exercise regularly.",
     content:
       "Losing weight requires a combination of healthy eating, regular exercise, and lifestyle changes. It is important to create a calorie deficit by burning more calories than you consume.",
-    references: [
+    references: JSON.stringify([
       {
         title: "Mayo Clinic",
         url: "https://www.mayoclinic.org/healthy-lifestyle/weight-loss/in-depth/weight-loss/art-20047752",
       },
-    ],
+    ]),
   },
   {
     id: 4,
@@ -69,12 +69,12 @@ export const dailyTips: DailyTip[] = [
       "Yoga can help improve flexibility, strength, and mental well-being.",
     content:
       "Yoga is a mind-body practice that combines physical postures, breathing exercises, and meditation. It can help reduce stress, improve flexibility, and promote overall well-being.",
-    references: [
+    references: JSON.stringify([
       {
         title: "National Center for Complementary and Integrative Health",
         url: "https://www.nccih.nih.gov/health/yoga-what-you-need-to-know",
       },
-    ],
+    ]),
   },
   {
     id: 5,
@@ -88,11 +88,11 @@ export const dailyTips: DailyTip[] = [
       "To improve your posture, focus on strengthening your core and back muscles.",
     content:
       "Good posture is important for overall health and well-being. It can help prevent back pain, improve breathing, and boost confidence. To improve your posture, focus on strengthening your core and back muscles, and practice good ergonomics.",
-    references: [
+    references: JSON.stringify([
       {
         title: "American Chiropractic Association",
         url: "https://www.acatoday.org/Patients/Health-Wellness-Information/Posture",
       },
-    ],
+    ]),
   },
 ];

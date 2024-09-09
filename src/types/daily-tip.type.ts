@@ -14,7 +14,18 @@ export const dailyTipSchema = z.object({
   image_url: z.string().url(),
   video_url: z.string().url(),
   references: z.array(referencesSchema),
-  lastShownDate: z.string().date().nullable(),
+  lastShownDate: z
+    .string()
+    .nullable()
+    .refine(
+      (date) => {
+        if (date === null) return true; // Skip validation if it's null
+        return /^\d{4}-\d{2}-\d{2}$/.test(date); // Validate YYYY-MM-DD format
+      },
+      {
+        message: "Invalid date format. Expected 'YYYY-MM-DD'",
+      }
+    ),
 });
 
 export type DailyTip = z.infer<typeof dailyTipSchema>;
