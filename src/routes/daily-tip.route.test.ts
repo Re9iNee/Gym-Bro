@@ -48,7 +48,7 @@ describe("/daily-tip Routes", () => {
   });
 });
 
-describe("POST /select-daily-tip", () => {
+describe("PATCH /assign-daily-tip", () => {
   it("should assign and return todays daily tip", async () => {
     const selectedDT = mockedDTs[2];
 
@@ -69,12 +69,14 @@ describe("POST /select-daily-tip", () => {
         ...selectedDT,
         isActive: true,
         lastShownDate: "2024-09-11",
+        references: [{ title: "something", url: "something.com" }],
       },
     });
   });
 
   it.todo("should call findMany once");
   it.todo("should call update method twice");
+  it.todo("make sure the response the type of response type (zod) and message");
 });
 
 const rest = {
@@ -82,7 +84,7 @@ const rest = {
   content: "something",
   image_url: "something",
   video_url: "something",
-  references: "something",
+  references: JSON.stringify([{ title: "something", url: "something.com" }]),
 };
 const mockedDTs: DailyTip[] = [
   {

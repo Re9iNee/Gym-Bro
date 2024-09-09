@@ -1,6 +1,12 @@
 import { Request, Response, Router } from "express";
+import {
+  convertToClientType,
+  selectDailyTip,
+} from "../controller/daily-tip.controller";
 import prisma from "../database/prisma";
-import { selectDailyTip } from "../controller/daily-tip.controller";
+import { tomorrow } from "../lib/utils/date.utils";
+import { DailyTip } from "../types/daily-tip.type";
+import { ResponseType } from "../types/response.type";
 
 const router = Router();
 
@@ -17,7 +23,7 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-router.patch("/assign", async (req: Request, res: Response) => {
+router.patch("/assign", async (_, res: Response<ResponseType<DailyTip>>) => {
   try {
     const selectedDT = await prisma.$transaction(async (tx) => {
       const dailyTips = await tx.dailyTip.findMany();
@@ -39,42 +45,19 @@ router.patch("/assign", async (req: Request, res: Response) => {
       return updatedSelected;
     });
 
-    const ls = formattedDate(selectedDT.lastShownDate ?? tomorrow());
+    const convertedDT = convertToClientType(selectedDT);
 
     res.status(200);
     res.send({
       message: "OK",
-      data: {
-        ...selectedDT,
-        lastShownDate: ls,
-      },
+      data: convertedDT,
     });
   } catch (error) {
     console.error(error);
 
     res.status(500);
-    res.send({ message: "Internal Server Error", error, data: null });
+    res.send({ message: "error", error });
   }
 });
 
 export default router;
-
-const tomorrow = () => {
-  const today = new Date();
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-
-  return tomorrow;
-};
-
-const formattedDate = (date: Date): string => {
-  // Get the year, month, and day
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed, so we add 1
-  let day = String(date.getDate()).padStart(2, "0");
-
-  // Combine in the YYYY-MM-DD format
-  let formattedDate = `${year}-${month}-${day}`;
-
-  return formattedDate;
-};

@@ -1,4 +1,6 @@
 import { DailyTip } from "@prisma/client";
+import { formatDate } from "../lib/utils/date.utils";
+import { DailyTip as DTClientType } from "../types/daily-tip.type";
 
 export function selectDailyTip(dts: DailyTip[]): DailyTip {
   let selected: DailyTip | undefined;
@@ -19,3 +21,13 @@ const earliestFirst = (dts: DailyTip[]): DailyTip[] => {
       Number(a.lastShownDate?.getTime()) - Number(b.lastShownDate?.getTime())
   );
 };
+
+export function convertToClientType(dt: DailyTip): DTClientType {
+  const { references, lastShownDate } = dt;
+
+  return {
+    ...dt,
+    lastShownDate: lastShownDate ? formatDate(lastShownDate) : null,
+    references: JSON.parse(String(references)),
+  };
+}

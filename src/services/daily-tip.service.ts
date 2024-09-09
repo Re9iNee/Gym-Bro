@@ -1,5 +1,4 @@
-import { DailyTip } from "@prisma/client";
-import { Prisma } from "@prisma/client";
+import { DailyTip, Prisma } from "@prisma/client";
 import prisma from "../database/prisma";
 
 export async function getTodayDailyTip(): Promise<DailyTip | null> {
