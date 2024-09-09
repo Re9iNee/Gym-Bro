@@ -10,20 +10,25 @@ import { ResponseType } from "../types/response.type";
 
 const router = Router();
 
-router.get("/", async (req: Request, res: Response) => {
+type dailyTipResponse = Response<ResponseType<DailyTip>>;
+
+router.get("/", async (req: Request, res: dailyTipResponse) => {
   try {
     const dailyTip = await prisma.dailyTip.findFirstOrThrow({
       where: { isActive: true },
     });
+
+    const convertedDT = convertToClientType(dailyTip);
+
     res.status(200);
-    res.send({ message: "OK", data: dailyTip, error: null });
+    res.send({ message: "OK", data: convertedDT });
   } catch (error) {
     res.status(500);
-    res.send({ message: "Internal Server Error", error, data: null });
+    res.send({ message: "error", error });
   }
 });
 
-router.patch("/assign", async (_, res: Response<ResponseType<DailyTip>>) => {
+router.patch("/assign", async (_, res: dailyTipResponse) => {
   try {
     const selectedDT = await prisma.$transaction(async (tx) => {
       const dailyTips = await tx.dailyTip.findMany();
