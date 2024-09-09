@@ -34,4 +34,10 @@ describe("DailyTip Service", () => {
 
     expect(dailyTip).toStrictEqual({ ...dtMockObject, id: 1 });
   });
+
+  it.todo("Should get all the dailyTips");
+  it.todo(
+    "Should call update with selected id and given isActive: true, lastShownDate: tomorrow()"
+  );
+  it.todo("should call update with prevSelected id and given isActive: false.");
 });

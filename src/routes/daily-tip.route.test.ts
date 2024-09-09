@@ -47,3 +47,77 @@ describe("/daily-tip Routes", () => {
     });
   });
 });
+
+describe("POST /select-daily-tip", () => {
+  it("should assign and return todays daily tip", async () => {
+    const selectedDT = mockedDTs[2];
+
+    prisma.$transaction.mockResolvedValue({
+      ...selectedDT,
+      isActive: true,
+      lastShownDate: new Date("2024-09-11"),
+    });
+
+    const response = await request(app).patch("/daily-tip/assign");
+
+    expect(response.status).toBe(200);
+    expect(response.type).toBe("application/json");
+
+    expect(response.body).toMatchObject({
+      message: "OK",
+      data: {
+        ...selectedDT,
+        isActive: true,
+        lastShownDate: "2024-09-11",
+      },
+    });
+  });
+
+  it.todo("should call findMany once");
+  it.todo("should call update method twice");
+});
+
+const rest = {
+  summary: "something",
+  content: "something",
+  image_url: "something",
+  video_url: "something",
+  references: "something",
+};
+const mockedDTs: DailyTip[] = [
+  {
+    id: 1,
+    isActive: false,
+    lastShownDate: new Date("2021-01-01"),
+    title: "DT1",
+    ...rest,
+  },
+  {
+    id: 2,
+    isActive: true,
+    lastShownDate: new Date("2021-01-01"),
+    title: "DT2",
+    ...rest,
+  },
+  {
+    id: 3,
+    isActive: false,
+    lastShownDate: null,
+    title: "DT3",
+    ...rest,
+  },
+  {
+    id: 4,
+    isActive: false,
+    lastShownDate: new Date("2021-01-01"),
+    title: "DT4",
+    ...rest,
+  },
+  {
+    id: 5,
+    isActive: false,
+    lastShownDate: new Date("2021-01-01"),
+    title: "DT5",
+    ...rest,
+  },
+];
