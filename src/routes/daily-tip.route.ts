@@ -60,4 +60,31 @@ router.patch("/assign", async (req: Request, res: Response) => {
   }
 });
 
+router.get("/test", async (req: Request, res: Response) => {
+  try {
+    console.log("Running vercel crons");
+
+    const createdDT = await prisma.dailyTip.create({
+      data: {
+        content: "test",
+        isActive: false,
+        lastShownDate: null,
+        title: "Test",
+        image_url:
+          "https://images.unsplash.com/photo-1626820000000-4b3b3b3b3b3b",
+        references: [{ title: "Test", url: "https://www.google.com" }],
+        video_url: "https://www.youtube.com/watch?v=6ZfuNTqbHE8",
+        summary: "Test",
+      },
+    });
+
+    res.status(200);
+    res.send({ message: "OK", data: createdDT });
+  } catch (error) {
+    console.log(error);
+    res.status(500);
+    res.send({ message: "Internal Server Error", error, data: null });
+  }
+});
+
 export default router;
