@@ -5,7 +5,7 @@ import {
 } from "../controller/daily-tip.controller";
 import prisma from "../database/prisma";
 
-import { formatDate, tomorrow } from "../lib/utils/date.utils";
+import { tomorrow } from "../lib/utils/date.utils";
 import { DailyTip } from "../types/daily-tip.type";
 import { ResponseType } from "../types/response.type";
 

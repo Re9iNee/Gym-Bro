@@ -25,10 +25,4 @@ describe("DailyTip Service", () => {
     expect(prisma.dailyTip.create).toHaveBeenCalledOnce();
     expect(dt).toStrictEqual(dailyTip);
   });
-
-  it.todo("Should get all the dailyTips");
-  it.todo(
-    "Should call update with selected id and given isActive: true, lastShownDate: tomorrow()"
-  );
-  it.todo("should call update with prevSelected id and given isActive: false.");
 });
