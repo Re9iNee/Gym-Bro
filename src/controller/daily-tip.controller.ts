@@ -6,6 +6,7 @@ export function selectDailyTip(dts: DailyTip[]): DailyTip {
   let selected: DailyTip | undefined;
 
   selected = dts.find((dt) => dt.lastShownDate === null);
+  if (selected) return selected;
 
   const sortedDailyTips = earliestFirst(dts);
 

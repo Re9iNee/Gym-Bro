@@ -4,7 +4,8 @@ import {
   selectDailyTip,
 } from "../controller/daily-tip.controller";
 import prisma from "../database/prisma";
-import { tomorrow } from "../lib/utils/date.utils";
+
+import { formatDate, tomorrow } from "../lib/utils/date.utils";
 import { DailyTip } from "../types/daily-tip.type";
 import { ResponseType } from "../types/response.type";
 
@@ -28,7 +29,7 @@ router.get("/", async (req: Request, res: dailyTipResponse) => {
   }
 });
 
-router.patch("/assign", async (_, res: dailyTipResponse) => {
+router.patch("/assign", async (req: Request, res: Response) => {
   try {
     const selectedDT = await prisma.$transaction(async (tx) => {
       const dailyTips = await tx.dailyTip.findMany();
@@ -50,18 +51,12 @@ router.patch("/assign", async (_, res: dailyTipResponse) => {
       return updatedSelected;
     });
 
-    const convertedDT = convertToClientType(selectedDT);
-
     res.status(200);
-    res.send({
-      message: "OK",
-      data: convertedDT,
-    });
+    res.send({ message: "OK", data: selectedDT, error: null });
   } catch (error) {
-    console.error(error);
-
+    console.log(error);
     res.status(500);
-    res.send({ message: "error", error });
+    res.send({ message: "Internal Server Error", error, data: null });
   }
 });
 

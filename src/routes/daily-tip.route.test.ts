@@ -3,6 +3,7 @@ import app from "../app";
 
 import { describe, expect, it, vi } from "vitest";
 import prisma from "../database/__mocks__/prisma";
+
 import { dailyTips } from "../lib/placeholder-data";
 import { dailyTipSchema } from "../types/daily-tip.type";
 
@@ -43,38 +44,98 @@ describe("/daily-tip Routes", () => {
       expect(parsedResult.success).toBe(true);
     });
   });
-});
 
-describe("PATCH /assign-daily-tip", () => {
-  it("should assign and return todays daily tip", async () => {
-    const selectedDT = dailyTips[2];
+  describe("PATCH /assign-daily-tip", () => {
+    it("should return todays daily tip", async () => {
+      const allDTs = [
+        {
+          id: 1,
+          isActive: false,
+        },
+        {
+          id: 2,
+          isActive: true, // previous active daily tip
+        },
+      ];
 
-    prisma.$transaction.mockResolvedValue({
-      ...selectedDT,
-      isActive: true,
-      lastShownDate: new Date("2024-09-11"),
-      references: JSON.stringify([
-        { title: "something", url: "something.com" },
-      ]),
-    });
-
-    const response = await request(app).patch("/daily-tip/assign");
-
-    expect(response.status).toBe(200);
-    expect(response.type).toBe("application/json");
-
-    expect(response.body).toMatchObject({
-      message: "OK",
-      data: {
+      const selectedDT = allDTs[0];
+      const updatedSelectDT = {
         ...selectedDT,
         isActive: true,
-        lastShownDate: "2024-09-11",
-        references: [{ title: "something", url: "something.com" }],
-      },
+        lastShownDate: "MockDate",
+      };
+
+      const transactionMock: any = {
+        dailyTip: {
+          findMany: vi.fn().mockResolvedValueOnce(allDTs),
+          update: vi.fn().mockResolvedValueOnce(updatedSelectDT),
+        },
+      };
+      prisma.$transaction.mockImplementationOnce(async (callback) =>
+        callback(transactionMock)
+      );
+
+      // Act
+      const response = await request(app).patch("/daily-tip/assign");
+      const data = await response.body;
+
+      expect(data).toMatchObject({
+        data: { id: 1, isActive: true, lastShownDate: "MockDate" },
+        error: null,
+        message: "OK",
+      });
+    });
+    it("should call update once if it has no previous active dt", async () => {
+      const allDTs = [
+        { id: 1, isActive: false },
+        { id: 2, isActive: false },
+      ];
+
+      const transactionMock: any = {
+        dailyTip: {
+          findMany: vi.fn().mockResolvedValue(allDTs),
+          update: vi.fn(),
+        },
+      };
+      prisma.$transaction.mockImplementationOnce(async (callback) =>
+        callback(transactionMock)
+      );
+
+      await request(app).patch("/daily-tip/assign");
+
+      expect(transactionMock.dailyTip.update).toHaveBeenCalledOnce();
+    });
+    it("should call update twice (update selectedDT & update previous DT)", async () => {
+      // Arrange
+      const allDTs = [
+        { id: 1, isActive: false },
+        { id: 2, isActive: true }, // This is the previous active daily tip
+        { id: 3, isActive: false },
+      ];
+
+      const selectedDT = allDTs[0];
+      const updatedSelectedDT = {
+        ...selectedDT,
+        isActive: true,
+        lastShownDate: "mockDate",
+      };
+
+      const transactionMock: any = {
+        dailyTip: {
+          findMany: vi.fn().mockResolvedValueOnce(allDTs),
+          update: vi.fn().mockResolvedValueOnce(updatedSelectedDT),
+        },
+      };
+      prisma.$transaction.mockImplementationOnce(async (callback) =>
+        callback(transactionMock)
+      );
+
+      // Act
+      const response = await request(app).patch("/daily-tip/assign");
+
+      // Assert
+      expect(transactionMock.dailyTip.findMany).toHaveBeenCalled();
+      expect(transactionMock.dailyTip.update).toHaveBeenCalledTimes(2);
     });
   });
-
-  it.todo("should call findMany once");
-  it.todo("should call update method twice");
-  it.todo("make sure the response the type of response type (zod) and message");
 });
