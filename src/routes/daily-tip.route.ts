@@ -62,8 +62,6 @@ router.patch("/assign", async (req: Request, res: Response) => {
 
 router.get("/test", async (req: Request, res: Response) => {
   try {
-    console.log("Running vercel crons");
-
     const createdDT = await prisma.dailyTip.create({
       data: {
         content: "test",
