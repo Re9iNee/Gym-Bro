@@ -10,7 +10,7 @@
     "dev": "nodemon",
     "test": "vitest",
     "start": "npm run build && node dist/src/index.js",
-    "postinstall": "prisma generate --no-engine && npx prisma db seed"
+    "postinstall": "prisma generate"
   },
   "author": "Reza Attarzadeh",
   "keywords": [
