@@ -45,7 +45,7 @@ describe("/daily-tip Routes", () => {
     });
   });
 
-  describe("PATCH /assign-daily-tip", () => {
+  describe("GET /daily-tip/assign", () => {
     it("should return todays daily tip", async () => {
       const allDTs = [
         {
@@ -76,7 +76,7 @@ describe("/daily-tip Routes", () => {
       );
 
       // Act
-      const response = await request(app).patch("/daily-tip/assign");
+      const response = await request(app).get("/daily-tip/assign");
       const data = await response.body;
 
       expect(data).toMatchObject({
@@ -101,7 +101,7 @@ describe("/daily-tip Routes", () => {
         callback(transactionMock)
       );
 
-      await request(app).patch("/daily-tip/assign");
+      await request(app).get("/daily-tip/assign");
 
       expect(transactionMock.dailyTip.update).toHaveBeenCalledOnce();
     });
@@ -131,7 +131,7 @@ describe("/daily-tip Routes", () => {
       );
 
       // Act
-      const response = await request(app).patch("/daily-tip/assign");
+      const response = await request(app).get("/daily-tip/assign");
 
       // Assert
       expect(transactionMock.dailyTip.findMany).toHaveBeenCalled();
