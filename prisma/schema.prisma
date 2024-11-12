@@ -8,6 +8,13 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
+enum Difficulty {
+  dark_souls
+  hard
+  medium
+  easy
+}
+
 model DailyTip {
   id            Int       @id @default(autoincrement())
   title         String
@@ -18,4 +25,9 @@ model DailyTip {
   references    Json
   lastShownDate DateTime?
   isActive      Boolean   @default(false)
+}
+
+model Exercises {
+  id         Int        @id @default(autoincrement())
+  difficulty Difficulty
 }
