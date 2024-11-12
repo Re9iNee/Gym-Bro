@@ -1,4 +1,3 @@
-import { Difficulty } from "@prisma/client";
 import request from "supertest";
 import { describe, expect, it, vi } from "vitest";
 import app from "../app";
@@ -23,7 +22,7 @@ describe("Difficulty Route", () => {
 
     expect(response.status).toBe(200);
     expect(data).toMatchObject({
-      data: Difficulty,
+      data: ["DARK_SOULS", "HARD", "MEDIUM", "EASY"],
       message: "OK",
     });
   });

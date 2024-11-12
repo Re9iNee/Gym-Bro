@@ -5,12 +5,15 @@ import { ResponseType } from "../types/response.type";
 
 const router = Router();
 
-type difficultyResponse = Response<ResponseType<any>>;
+type DifficultyT = (typeof Difficulty)[keyof typeof Difficulty];
+type difficultyResponse = Response<ResponseType<DifficultyT[]>>;
 
 router.get("/", async (req: Request, res: difficultyResponse) => {
   try {
+    const difficulties: DifficultyT[] = Object.values(Difficulty);
+
     res.status(200);
-    res.send({ message: "OK", data: Difficulty });
+    res.send({ message: "OK", data: difficulties });
   } catch (error) {
     res.status(500);
     res.send({ message: "error", error });
