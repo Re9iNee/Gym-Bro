@@ -8,13 +8,6 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
-enum Difficulty {
-  dark_souls
-  hard
-  medium
-  easy
-}
-
 model DailyTip {
   id            Int       @id @default(autoincrement())
   title         String
@@ -27,7 +20,134 @@ model DailyTip {
   isActive      Boolean   @default(false)
 }
 
-model Exercises {
-  id         Int        @id @default(autoincrement())
-  difficulty Difficulty
+model Exercise {
+  id              Int         @id @default(autoincrement())
+  difficulty      Difficulty
+  name            String
+  equipment       Equipment[]
+  muscles         Muscle[]
+  tips            String[]
+  steps           String[]
+  goal            Goal[]
+  focus           Focus[]
+  alternate_names String[]
+  video_url       String
+  image_url       String
+  description     String
+}
+
+enum Difficulty {
+  DARK_SOULS
+  HARD
+  MEDIUM
+  EASY
+}
+
+enum Equipment {
+  BODY_WEIGHT
+  BARBELL
+  DUMBBELL
+  KETTLEBELL
+  MEDICINE_BALL
+  RESISTANCE_BAND
+  SAND_BAG
+  SLAM_BALL
+  SLED
+  WEIGHT_PLATE
+  BOX
+  BENCH
+  PULL_UP_BAR
+  RINGS
+  PARALLETTES
+  JUMP_ROPE
+  ROWER
+  BIKE
+  TREADMILL
+  SKIERG
+  STAIR_MASTER
+  ELLIPTICAL
+  SWIMMING_POOL
+  TRACK
+  FIELD
+  SLEDGE_HAMMER
+  TIRES
+}
+
+enum Muscle {
+  NECK
+
+  REAR_DELTS
+  FRONT_DELTS
+  LATERAL_DELTS
+
+  TRAPS
+
+  UPPER_CHEST
+  LOWER_CHEST
+  MIDDLE_CHEST
+
+  LATS
+  UPPER_BACK
+  LOWER_BACK
+
+  BICEPS
+  TRICEPS
+  FOREARMS
+
+  ABS
+  V_Line
+  OBLIQUES
+
+  QUADS
+  CALVES
+  GLUTES
+  ADDUCTORS
+  ABDUCTORS
+  HAMSTRINGS
+
+  HIP_FLEXORS
+}
+
+enum Goal {
+  FAT_BURNING
+  WEIGHT_LOSS
+  PERFORMANCE
+  MUSCLE_GAIN
+  STRENGTH
+  FLEXIBILITY
+  ENDURANCE
+  BALANCE
+  COORDINATION
+  AGILITY
+  SPEED
+  POWER
+  CARDIO
+  MUSCLE_TONE
+  MUSCLE_DEFINITION
+  MUSCLE_HYPERTROPHY
+  MUSCLE_MAINTENANCE
+  MUSCLE_RECOVERY
+  MUSCLE_REHABILITATION
+  MUSCLE_ACTIVATION
+  MUSCLE_RELAXATION
+  MUSCLE_MOBILITY
+  MUSCLE_STABILITY
+  MUSCLE_EXPLOSIVENESS
+}
+
+enum Focus {
+  UPPER_BODY
+  LOWER_BODY
+  FULL_BODY
+  CORE
+  ARMS
+  LEGS
+  BACK
+  CHEST
+  SHOULDERS
+  GLUTES
+  STRETCH
+  MINDFULNESS
+  WARM_UP
+  COOL_DOWN
 }
