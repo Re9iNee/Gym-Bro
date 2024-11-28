@@ -1,4 +1,7 @@
-import { DailyTip as ServerDailyTip } from "@prisma/client";
+import {
+  Exercise as ServerExercise,
+  DailyTip as ServerDailyTip,
+} from "@prisma/client";
 
 export const dailyTips: ServerDailyTip[] = [
   {
@@ -94,5 +97,32 @@ export const dailyTips: ServerDailyTip[] = [
         url: "https://www.acatoday.org/Patients/Health-Wellness-Information/Posture",
       },
     ]),
+  },
+];
+
+export const exercises: ServerExercise[] = [
+  {
+    id: 1,
+    name: "Pull-up",
+    difficulty: "HARD",
+    muscles: ["LOWER_BACK", "BICEPS"],
+    tips: [
+      "If you can't do a pull-up, try a chin-up, which is easier.",
+      "If you can't do a chin-up, try a negative pull-up, which is easier still.",
+    ],
+    steps: [
+      "Hang from a pull-up bar with your hands shoulder-width apart.",
+      "Pull your chest up to the bar, then lower yourself back to the starting position.",
+      "Repeat.",
+    ],
+    equipments: ["PULL_UP_BAR"],
+    goals: ["STRENGTH", "MUSCLE_GAIN"],
+    focuses: ["UPPER_BODY", "BACK"],
+    alternate_names: ["Chin-up", "Barfix"],
+    video_url: "https://www.youtube.com/watch?v=eGo4IYlbE5g",
+    image_url:
+      "https://mikereinold.com/wp-content/uploads/rookie-mistakes-the-pullup-main.jpg",
+    description:
+      "The pull-up is a bodyweight exercise that targets the muscles of the back and biceps. It is a challenging exercise that requires upper body strength and core stability.",
   },
 ];

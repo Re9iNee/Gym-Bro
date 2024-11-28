@@ -24,12 +24,12 @@ model Exercise {
   id              Int         @id @default(autoincrement())
   difficulty      Difficulty
   name            String
-  equipment       Equipment[]
+  equipments      Equipment[]
   muscles         Muscle[]
   tips            String[]
   steps           String[]
-  goal            Goal[]
-  focus           Focus[]
+  goals           Goal[]
+  focuses         Focus[]
   alternate_names String[]
   video_url       String
   image_url       String

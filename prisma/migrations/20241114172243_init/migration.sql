@@ -1,0 +1,48 @@
+-- CreateEnum
+CREATE TYPE "Difficulty" AS ENUM ('DARK_SOULS', 'HARD', 'MEDIUM', 'EASY');
+
+-- CreateEnum
+CREATE TYPE "Equipment" AS ENUM ('BODY_WEIGHT', 'BARBELL', 'DUMBBELL', 'KETTLEBELL', 'MEDICINE_BALL', 'RESISTANCE_BAND', 'SAND_BAG', 'SLAM_BALL', 'SLED', 'WEIGHT_PLATE', 'BOX', 'BENCH', 'PULL_UP_BAR', 'RINGS', 'PARALLETTES', 'JUMP_ROPE', 'ROWER', 'BIKE', 'TREADMILL', 'SKIERG', 'STAIR_MASTER', 'ELLIPTICAL', 'SWIMMING_POOL', 'TRACK', 'FIELD', 'SLEDGE_HAMMER', 'TIRES');
+
+-- CreateEnum
+CREATE TYPE "Muscle" AS ENUM ('NECK', 'REAR_DELTS', 'FRONT_DELTS', 'LATERAL_DELTS', 'TRAPS', 'UPPER_CHEST', 'LOWER_CHEST', 'MIDDLE_CHEST', 'LATS', 'UPPER_BACK', 'LOWER_BACK', 'BICEPS', 'TRICEPS', 'FOREARMS', 'ABS', 'V_Line', 'OBLIQUES', 'QUADS', 'CALVES', 'GLUTES', 'ADDUCTORS', 'ABDUCTORS', 'HAMSTRINGS', 'HIP_FLEXORS');
+
+-- CreateEnum
+CREATE TYPE "Goal" AS ENUM ('FAT_BURNING', 'WEIGHT_LOSS', 'PERFORMANCE', 'MUSCLE_GAIN', 'STRENGTH', 'FLEXIBILITY', 'ENDURANCE', 'BALANCE', 'COORDINATION', 'AGILITY', 'SPEED', 'POWER', 'CARDIO', 'MUSCLE_TONE', 'MUSCLE_DEFINITION', 'MUSCLE_HYPERTROPHY', 'MUSCLE_MAINTENANCE', 'MUSCLE_RECOVERY', 'MUSCLE_REHABILITATION', 'MUSCLE_ACTIVATION', 'MUSCLE_RELAXATION', 'MUSCLE_MOBILITY', 'MUSCLE_STABILITY', 'MUSCLE_EXPLOSIVENESS');
+
+-- CreateEnum
+CREATE TYPE "Focus" AS ENUM ('UPPER_BODY', 'LOWER_BODY', 'FULL_BODY', 'CORE', 'ARMS', 'LEGS', 'BACK', 'CHEST', 'SHOULDERS', 'GLUTES', 'STRETCH', 'MINDFULNESS', 'WARM_UP', 'COOL_DOWN');
+
+-- CreateTable
+CREATE TABLE "DailyTip" (
+    "id" SERIAL NOT NULL,
+    "title" TEXT NOT NULL,
+    "summary" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
+    "image_url" TEXT NOT NULL,
+    "video_url" TEXT NOT NULL,
+    "references" JSONB NOT NULL,
+    "lastShownDate" TIMESTAMP(3),
+    "isActive" BOOLEAN NOT NULL DEFAULT false,
+
+    CONSTRAINT "DailyTip_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Exercise" (
+    "id" SERIAL NOT NULL,
+    "difficulty" "Difficulty" NOT NULL,
+    "name" TEXT NOT NULL,
+    "equipment" "Equipment"[],
+    "muscles" "Muscle"[],
+    "tips" TEXT[],
+    "steps" TEXT[],
+    "goal" "Goal"[],
+    "focus" "Focus"[],
+    "alternate_names" TEXT[],
+    "video_url" TEXT NOT NULL,
+    "image_url" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+
+    CONSTRAINT "Exercise_pkey" PRIMARY KEY ("id")
+);

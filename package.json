@@ -9,8 +9,9 @@
     "build": "tsc",
     "dev": "nodemon",
     "test": "vitest",
+    "seed": "npx prisma db seed",
     "start": "npm run build && node dist/src/index.js",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate && npx prisma db seed"
   },
   "author": "Reza Attarzadeh",
   "keywords": [
