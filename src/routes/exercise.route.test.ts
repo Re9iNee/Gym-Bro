@@ -6,6 +6,7 @@ import app from "../app";
 import prisma from "../database/__mocks__/prisma";
 import { exerciseSchema } from "../types/exercise.type";
 import { exercises as placeholderExercise } from "../lib/placeholder-data";
+import { objectContainsKey } from "vitest-mock-extended";
 
 const exerciseMock = placeholderExercise[0];
 
@@ -66,6 +67,57 @@ describe("Exercise Route", () => {
       expect(response.body).toMatchObject({
         message: "OK",
         data: exerciseMock,
+      });
+    });
+
+    it("should be to searchable by name", async () => {
+      // ARRANGE
+      prisma.exercise.findMany.mockResolvedValueOnce([exerciseMock]);
+
+      // ACT
+      await request(app).get("/exercise?name=exercise");
+
+      // ASSERT
+      expect(prisma.exercise.findMany).toHaveBeenCalledWith({
+        where: expect.objectContaining({
+          name: {
+            contains: "exercise",
+            mode: "insensitive",
+          },
+        }),
+      });
+    });
+
+    it("should be searchable by goals", async () => {
+      // ARRANGE
+      prisma.exercise.findMany.mockResolvedValueOnce([exerciseMock]);
+
+      // ACT
+      await request(app).get("/exercise?goals=WEIGHT_LOSS");
+
+      // ASSERT
+      expect(prisma.exercise.findMany).toHaveBeenCalledWith({
+        where: expect.objectContaining({
+          goals: {
+            has: "WEIGHT_LOSS",
+          },
+        }),
+      });
+    });
+
+    it("should throw proper error if goal is not a valid goal", async () => {
+      // ARRANGE
+      prisma.exercise.findMany.mockResolvedValueOnce([exerciseMock]);
+
+      // ACT
+      const response = await request(app).get("/exercise?goals=INVALID_GOAL");
+
+      // ASSERT
+      expect(response.status).toBe(406);
+      expect(response.body).toMatchObject({
+        message: "error",
+        error:
+          "Not Acceptable, Invalid goal provided, please provide a valid goal",
       });
     });
   });

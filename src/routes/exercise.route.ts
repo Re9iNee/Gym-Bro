@@ -1,7 +1,9 @@
+import { Goal, Prisma } from "@prisma/client";
 import { Request, Response, Router } from "express";
-import { ResponseType } from "../types/response.type";
+import { isGoalValid } from "../controller/exercise.controller";
 import prisma from "../database/prisma";
 import { Exercise } from "../types/exercise.type";
+import { ResponseType } from "../types/response.type";
 
 const router = Router();
 
@@ -9,7 +11,37 @@ type getAllExercisesResponse = Response<ResponseType<Exercise[]>>;
 
 router.get("/", async (req: Request, res: getAllExercisesResponse) => {
   try {
-    const exercise = await prisma.exercise.findMany();
+    const queryParams = req.query;
+
+    const whereClause: Prisma.ExerciseWhereInput = {};
+
+    if (queryParams?.name) {
+      whereClause.name = {
+        contains: queryParams.name.toString(),
+        mode: "insensitive",
+      };
+    }
+    if (queryParams?.goals) {
+      const isValid = isGoalValid(queryParams.goals as Goal);
+      if (!isValid) {
+        res.status(406);
+        res.send({
+          message: "error",
+          error:
+            "Not Acceptable, Invalid goal provided, please provide a valid goal",
+        });
+        return;
+      }
+
+      // if the goal is valid
+      whereClause.goals = {
+        has: queryParams.goals as Goal,
+      };
+    }
+
+    const exercise = await prisma.exercise.findMany({
+      where: whereClause,
+    });
 
     res.status(200);
     res.send({ message: "OK", data: exercise });
