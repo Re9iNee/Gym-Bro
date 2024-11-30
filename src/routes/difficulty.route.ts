@@ -2,10 +2,11 @@ import { Request, Response, Router } from "express";
 
 import { Difficulty } from "@prisma/client";
 import { ResponseType } from "../types/response.type";
+import { EnumToType } from "../types/generics.type";
 
 const router = Router();
 
-type DifficultyT = (typeof Difficulty)[keyof typeof Difficulty];
+type DifficultyT = EnumToType<typeof Difficulty>;
 type difficultyResponse = Response<ResponseType<DifficultyT[]>>;
 
 router.get("/", async (req: Request, res: difficultyResponse) => {

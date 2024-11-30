@@ -1,12 +1,10 @@
-import { Exercise as ServerExerciseType } from "@prisma/client";
 import { beforeEach } from "node:test";
 import request from "supertest";
 import { describe, expect, it, vi } from "vitest";
 import app from "../app";
 import prisma from "../database/__mocks__/prisma";
-import { exerciseSchema } from "../types/exercise.type";
 import { exercises as placeholderExercise } from "../lib/placeholder-data";
-import { objectContainsKey } from "vitest-mock-extended";
+import { exerciseSchema } from "../types/exercise.type";
 
 const exerciseMock = placeholderExercise[0];
 
