@@ -36,6 +36,18 @@ model Exercise {
   description     String
 }
 
+model User {
+  id       Int       @id @default(autoincrement())
+  weight   Float?
+  height   Float?
+  name     String?
+  goals    Goal[]
+  gender   String?
+  password String
+  username String    @unique
+  birthday DateTime?
+}
+
 enum Difficulty {
   DARK_SOULS
   HARD
