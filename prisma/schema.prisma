@@ -22,30 +22,36 @@ model DailyTip {
 
 model Exercise {
   id              Int         @id @default(autoincrement())
-  difficulty      Difficulty
   name            String
-  equipments      Equipment[]
-  muscles         Muscle[]
-  tips            String[]
-  steps           String[]
-  goals           Goal[]
-  focuses         Focus[]
-  alternate_names String[]
   video_url       String
   image_url       String
   description     String
+  goals           Goal[]
+  users           User[]
+  focuses         Focus[]
+  muscles         Muscle[]
+  tips            String[]
+  steps           String[]
+  alternate_names String[]
+  difficulty      Difficulty
+  equipments      Equipment[]
 }
 
 model User {
-  id       Int       @id @default(autoincrement())
-  weight   Float?
-  height   Float?
-  name     String?
-  goals    Goal[]
-  gender   String?
-  password String
-  username String    @unique
-  birthday DateTime?
+  id            Int        @id @default(autoincrement())
+  username      String     @unique
+  email         String     @unique
+  weight        Float?
+  height        Float?
+  name          String?
+  goals         Goal[]
+  gender        String?
+  password      String
+  birthday      DateTime?
+  age           Int?
+  phone         String?
+  avatar        String?
+  fav_exercises Exercise[]
 }
 
 enum Difficulty {
