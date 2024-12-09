@@ -15,9 +15,11 @@ export const userSchema = z.object({
           "must contain at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character.",
       }
     ),
+  email: z.string().email({ message: "Invalid email" }),
 });
 
 export const registerSchema = userSchema.pick({
+  email: true,
   username: true,
   password: true,
 });

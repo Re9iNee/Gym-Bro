@@ -1,10 +1,10 @@
 import { Prisma, User } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import requestFn from "supertest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import app from "../app";
 import prisma from "../database/__mocks__/prisma";
 import { hashPassword } from "../lib/utils/app.utils";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 vi.mock("../database/prisma");
 
@@ -17,10 +17,13 @@ describe("Register Route", () => {
   const invalidPassword = "invalidPassword";
   const invalidUsername = "ddd";
   const validUsername = "testUser";
+  const validEmail = "a@a.com";
+  const invalidEmail = "a.com";
 
   it("should register a new user with username & password", async () => {
-    const request = {
+    const request: Prisma.UserCreateInput = {
       username: validUsername,
+      email: validEmail,
       password: validPassword,
     };
     prisma.user.create.mockResolvedValueOnce({
@@ -32,6 +35,7 @@ describe("Register Route", () => {
 
     expect(prisma.user.create).toHaveBeenCalledWith({
       data: {
+        email: request.email,
         username: request.username,
         password: "mockedHashPassword",
       },
@@ -48,7 +52,8 @@ describe("Register Route", () => {
 
   it("should call hash password function", async () => {
     // Arrange
-    const request = {
+    const request: Prisma.UserCreateInput = {
+      email: validEmail,
       username: validUsername,
       password: validPassword,
     };
@@ -78,13 +83,31 @@ describe("Register Route", () => {
       });
     });
 
+    it("should throw an error on invalid email", async () => {
+      const request: Prisma.UserCreateInput = {
+        email: invalidEmail,
+        username: validUsername,
+        password: validPassword,
+      };
+
+      const response = await requestFn(app).post("/register").send(request);
+
+      expect(response.status).toBe(400);
+      expect(response.body).toMatchObject({
+        message: "error",
+        error: "'email', Invalid email",
+      });
+    });
+
     describe("Invalid Username", () => {
       beforeEach(() => {
         vi.restoreAllMocks();
         prisma.user.create.mockResolvedValueOnce({} as User);
       });
+
       it("should throw an error on username smaller than 4 characters", async () => {
-        const request = {
+        const request: Prisma.UserCreateInput = {
+          email: validEmail,
           username: invalidUsername,
           password: validPassword,
         };
@@ -98,7 +121,8 @@ describe("Register Route", () => {
         });
       });
       it("should throw an error on username larger than 20 characters", async () => {
-        const request = {
+        const request: Prisma.UserCreateInput = {
+          email: validEmail,
           username: invalidUsername.repeat(60),
           password: validPassword,
         };
@@ -120,7 +144,8 @@ describe("Register Route", () => {
       });
 
       it("should throw an error on invalid password", async () => {
-        const request = {
+        const request: Prisma.UserCreateInput = {
+          email: validEmail,
           username: validUsername,
           password: invalidPassword,
         };
@@ -143,7 +168,8 @@ describe("Register Route", () => {
 
       it("should return 500 on prisma error", async () => {
         prisma.user.create.mockRejectedValueOnce(new Error("Prisma Error"));
-        const request = {
+        const request: Prisma.UserCreateInput = {
+          email: validEmail,
           username: validUsername,
           password: validPassword,
         };
@@ -163,7 +189,8 @@ describe("Register Route", () => {
           { code: "P2002", clientVersion: "5.19.1" }
         );
         prisma.user.create.mockRejectedValueOnce(error);
-        const request = {
+        const request: Prisma.UserCreateInput = {
+          email: validEmail,
           username: validUsername,
           password: validPassword,
         };
