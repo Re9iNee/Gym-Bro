@@ -1,6 +1,7 @@
 import {
   Exercise as ServerExercise,
   DailyTip as ServerDailyTip,
+  User as ServerUser,
 } from "@prisma/client";
 
 export const dailyTips: ServerDailyTip[] = [
@@ -124,5 +125,23 @@ export const exercises: ServerExercise[] = [
       "https://mikereinold.com/wp-content/uploads/rookie-mistakes-the-pullup-main.jpg",
     description:
       "The pull-up is a bodyweight exercise that targets the muscles of the back and biceps. It is a challenging exercise that requires upper body strength and core stability.",
+  },
+];
+
+export const users: ServerUser[] = [
+  {
+    id: 1,
+    age: 27,
+    weight: 84,
+    height: 176,
+    gender: "Male",
+    name: "John Doe",
+    username: "john.doe",
+    phone: "123-456-7890",
+    goals: ["WEIGHT_LOSS"],
+    password: "hashedPassword",
+    email: "john.doe@gmail.com",
+    birthday: new Date("1994-07-06"),
+    avatar: "https://avatars.githubusercontent.com/u/139426",
   },
 ];
