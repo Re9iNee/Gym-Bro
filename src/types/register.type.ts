@@ -1,3 +1,4 @@
+import { Goal } from "@prisma/client";
 import { z } from "zod";
 
 export const userSchema = z.object({
@@ -16,12 +17,21 @@ export const userSchema = z.object({
       }
     ),
   email: z.string().email({ message: "Invalid email" }),
+  // Optional fields
+  age: z.number().optional(),
+  name: z.string().optional(),
+  phone: z.string().optional(),
+  gender: z.string().optional(),
+  weight: z.number().optional(),
+  height: z.number().optional(),
+  avatar: z.string().optional(),
+  birthday: z.string().date().optional(),
+  goals: z.array(z.nativeEnum(Goal)).default([]),
+  fav_exercises: z.array(z.number().int()).default([]),
 });
 
-export const registerSchema = userSchema.pick({
-  email: true,
-  username: true,
-  password: true,
+export const registerSchema = userSchema.omit({
+  id: true,
 });
 
-export type Register = z.infer<typeof userSchema>;
+export type User = z.infer<typeof userSchema>;

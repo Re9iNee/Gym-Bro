@@ -1,9 +1,9 @@
 import { Prisma, User } from "@prisma/client";
 import { Request, Response, Router } from "express";
 import prisma from "../database/prisma";
-import { registerSchema, userSchema } from "../types/register.type";
-import { ResponseType } from "../types/response.type";
 import { hashPassword } from "../lib/utils/app.utils";
+import { registerSchema } from "../types/register.type";
+import { ResponseType } from "../types/response.type";
 
 const router = Router();
 
@@ -43,10 +43,22 @@ router.post("/", async (req: Request, res: RegisterResponseType) => {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       if (e.code === "P2002") {
         res.status(409);
-        return res.json({
-          message: "error",
-          error: "Username already exists.",
-        });
+        if (
+          e?.meta &&
+          Array.isArray(e.meta.target) &&
+          e.meta.target.includes("email")
+        ) {
+          return res.json({ message: "error", error: "Email already exists." });
+        } else if (
+          e?.meta &&
+          Array.isArray(e.meta.target) &&
+          e.meta.target.includes("username")
+        ) {
+          return res.json({
+            message: "error",
+            error: "Username already exists.",
+          });
+        }
       }
     }
 

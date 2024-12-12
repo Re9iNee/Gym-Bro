@@ -186,7 +186,11 @@ describe("Register Route", () => {
       it("should return 409 on duplicate username", async () => {
         const error = new PrismaClientKnownRequestError(
           "Username already exists.",
-          { code: "P2002", clientVersion: "5.19.1" }
+          {
+            code: "P2002",
+            clientVersion: "5.19.1",
+            meta: { target: ["username"] },
+          }
         );
         prisma.user.create.mockRejectedValueOnce(error);
         const request: Prisma.UserCreateInput = {
@@ -201,6 +205,31 @@ describe("Register Route", () => {
         expect(response.body).toMatchObject({
           message: "error",
           error: "Username already exists.",
+        });
+      });
+
+      it("should return 409 on duplicate email", async () => {
+        const error = new PrismaClientKnownRequestError(
+          "Email already exists.",
+          {
+            code: "P2002",
+            clientVersion: "5.19.1",
+            meta: { target: ["email"] },
+          }
+        );
+        prisma.user.create.mockRejectedValueOnce(error);
+        const request: Prisma.UserCreateInput = {
+          email: validEmail,
+          username: validUsername,
+          password: validPassword,
+        };
+
+        const response = await requestFn(app).post("/register").send(request);
+
+        expect(response.status).toBe(409);
+        expect(response.body).toMatchObject({
+          message: "error",
+          error: "Email already exists.",
         });
       });
     });
