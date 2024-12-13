@@ -8,6 +8,7 @@ import { users } from "../lib/placeholder-data";
 vi.mock("../database/prisma");
 
 const validUser = users[0];
+const validPassword = "pa55W0rd";
 
 describe("Login Route", () => {
   describe("Success", () => {
@@ -17,10 +18,11 @@ describe("Login Route", () => {
     });
     it("should return 200", async () => {
       const request = {
-        username: validUser.username,
-        password: "testPassword",
         email: validUser.email,
+        password: validPassword,
+        username: validUser.username,
       };
+
       // ACT
       const response = await requestFn(app).post("/login").send(request);
 
@@ -38,9 +40,9 @@ describe("Login Route", () => {
 
     it("should call prisma findUnique", async () => {
       const request = {
-        username: validUser.username,
-        password: "testPassword",
         email: validUser.email,
+        password: validPassword,
+        username: validUser.username,
       };
 
       // ACT
@@ -66,9 +68,9 @@ describe("Login Route", () => {
       );
       prisma.user.findUniqueOrThrow.mockRejectedValueOnce(error);
       const request = {
+        email: "non@exist.com",
         username: "nonexistent",
         password: "testPassword",
-        email: "non@exist.com",
       };
 
       //   Act
@@ -81,8 +83,46 @@ describe("Login Route", () => {
         error: "User not found.",
       });
     });
-    it.todo("should return 401 if password is incorrect");
-    it.todo("should return 400 if request doesn't have any body");
-    it.todo("should get either username or email, but can accept both");
+
+    it("should return 401 if password is incorrect", async () => {
+      const request = {
+        username: validUser.username,
+        password: "wrongPassword",
+        email: validUser.email,
+      };
+      prisma.user.findUniqueOrThrow.mockResolvedValueOnce(validUser);
+
+      // Act
+      const response = await requestFn(app).post("/login").send(request);
+
+      // Arrange
+      expect(response.status).toBe(401);
+      expect(response.body).toMatchObject({
+        message: "error",
+        error: "Password is incorrect.",
+      });
+    });
+    it("should return 400 if request doesn't have any body", async () => {
+      const response = await requestFn(app).post("/login");
+
+      expect(response.status).toBe(400);
+      expect(response.body).toMatchObject({
+        message: "error",
+        error: "Request body is required.",
+      });
+    });
+    it("should get either username or email, but can accept both", async () => {
+      const request = {
+        password: validPassword,
+      };
+
+      const response = await requestFn(app).post("/login").send(request);
+
+      expect(response.status).toBe(400);
+      expect(response.body).toMatchObject({
+        message: "error",
+        error: "'email' or 'username' is required",
+      });
+    });
   });
 });

@@ -2,7 +2,7 @@ import { Prisma, User } from "@prisma/client";
 import { Request, Response, Router } from "express";
 import prisma from "../database/prisma";
 import { hashPassword } from "../lib/utils/app.utils";
-import { registerSchema } from "../types/register.type";
+import { registerSchema } from "../types/user.type";
 import { ResponseType } from "../types/response.type";
 
 const router = Router();

@@ -1,6 +1,6 @@
 import {
-  Exercise as ServerExercise,
   DailyTip as ServerDailyTip,
+  Exercise as ServerExercise,
   User as ServerUser,
 } from "@prisma/client";
 
@@ -139,9 +139,9 @@ export const users: ServerUser[] = [
     username: "john.doe",
     phone: "123-456-7890",
     goals: ["WEIGHT_LOSS"],
-    password: "hashedPassword",
     email: "john.doe@gmail.com",
     birthday: new Date("1994-07-06"),
     avatar: "https://avatars.githubusercontent.com/u/139426",
+    password: "$2a$12$OLnhTua6fh7zc9zc/2si7eKstW8GeVn6HIFKVP7EZcDPlbgxEnoRu", // hash of "pa55W0rd"
   },
 ];

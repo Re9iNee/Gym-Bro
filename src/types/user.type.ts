@@ -34,4 +34,10 @@ export const registerSchema = userSchema.omit({
   id: true,
 });
 
+export const loginSchema = userSchema.pick({
+  password: true,
+  username: true,
+  email: true,
+});
+
 export type User = z.infer<typeof userSchema>;
