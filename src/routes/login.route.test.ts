@@ -51,6 +51,7 @@ describe("Login Route", () => {
       // Assert
       expect(prisma.user.findUniqueOrThrow).toHaveBeenCalledWith({
         where: { username: request.username, email: request.email },
+        include: { fav_exercises: true },
       });
     });
   });

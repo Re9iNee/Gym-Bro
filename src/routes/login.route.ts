@@ -31,6 +31,9 @@ router.post("/", async (req: Request, res: LoginResponseType) => {
 
     const user = await prisma.user.findUniqueOrThrow({
       where: { username: reqUsername, email: reqEmail },
+      include: {
+        fav_exercises: true,
+      },
     });
 
     const isPasswordValid = await compare(password, user.password);

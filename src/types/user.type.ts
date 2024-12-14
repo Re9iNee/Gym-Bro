@@ -27,7 +27,7 @@ export const userSchema = z.object({
   avatar: z.string().optional(),
   birthday: z.string().date().optional(),
   goals: z.array(z.nativeEnum(Goal)).default([]),
-  fav_exercises: z.array(z.number().int()).default([]),
+  fav_exercises: z.array(z.any()).default([]),
 });
 
 export const registerSchema = userSchema.omit({

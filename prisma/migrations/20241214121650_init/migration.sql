@@ -33,16 +33,55 @@ CREATE TABLE "Exercise" (
     "id" SERIAL NOT NULL,
     "difficulty" "Difficulty" NOT NULL,
     "name" TEXT NOT NULL,
-    "equipment" "Equipment"[],
     "muscles" "Muscle"[],
     "tips" TEXT[],
     "steps" TEXT[],
-    "goal" "Goal"[],
-    "focus" "Focus"[],
     "alternate_names" TEXT[],
     "video_url" TEXT NOT NULL,
     "image_url" TEXT NOT NULL,
     "description" TEXT NOT NULL,
+    "equipments" "Equipment"[],
+    "focuses" "Focus"[],
+    "goals" "Goal"[],
 
     CONSTRAINT "Exercise_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateTable
+CREATE TABLE "User" (
+    "id" SERIAL NOT NULL,
+    "weight" DOUBLE PRECISION,
+    "height" DOUBLE PRECISION,
+    "name" TEXT,
+    "goals" "Goal"[],
+    "gender" TEXT,
+    "password" TEXT NOT NULL,
+    "username" TEXT NOT NULL,
+    "birthday" TIMESTAMP(3),
+    "age" INTEGER,
+    "avatar" TEXT,
+    "email" TEXT NOT NULL,
+    "phone" TEXT,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "UserExercise" (
+    "userId" INTEGER NOT NULL,
+    "exerciseId" INTEGER NOT NULL,
+
+    CONSTRAINT "UserExercise_pkey" PRIMARY KEY ("userId","exerciseId")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- AddForeignKey
+ALTER TABLE "UserExercise" ADD CONSTRAINT "UserExercise_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserExercise" ADD CONSTRAINT "UserExercise_exerciseId_fkey" FOREIGN KEY ("exerciseId") REFERENCES "Exercise"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
