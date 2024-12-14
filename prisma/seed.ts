@@ -1,10 +1,11 @@
 import prisma from "../src/database/prisma";
-import { dailyTips, exercises } from "../src/lib/placeholder-data";
+import { dailyTips, exercises, users } from "../src/lib/placeholder-data";
 
 async function main() {
   await clearDB();
   await seedDailyTips();
   await seedExercises();
+  await seedUsers();
   await prisma.$disconnect();
 }
 
@@ -14,6 +15,16 @@ main().catch((err) => {
     err
   );
 });
+
+async function seedUsers() {
+  const formattedUsers = users.map((user) => ({
+    ...user,
+    id: undefined,
+  }));
+
+  const rows = await prisma.user.createMany({ data: formattedUsers });
+  console.log(`🌱 Seeded ${rows.count} users`);
+}
 
 async function seedDailyTips() {
   const formattedDTs = dailyTips.map((dt) => ({
@@ -45,8 +56,9 @@ async function clearDB() {
 
   const deletedDailyTip = prisma.dailyTip.deleteMany();
   const deletedExercise = prisma.exercise.deleteMany();
+  const deletedUser = prisma.user.deleteMany();
 
-  await prisma.$transaction([deletedDailyTip, deletedExercise]);
+  await prisma.$transaction([deletedDailyTip, deletedExercise, deletedUser]);
 
   console.log("✅ DB cleared!");
 }

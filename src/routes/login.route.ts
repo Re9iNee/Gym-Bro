@@ -18,6 +18,15 @@ router.post("/", async (req: Request, res: LoginResponseType) => {
         error: "Request body is required.",
       });
     }
+
+    if (!body.username && !body.email) {
+      res.status(400);
+      return res.json({
+        message: "error",
+        error: "'email' or 'username' is required",
+      });
+    }
+
     const { username: reqUsername, email: reqEmail, password } = body;
 
     const user = await prisma.user.findUniqueOrThrow({
