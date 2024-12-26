@@ -7,6 +7,7 @@ import exerciseRouter from "./routes/exercise.route";
 import muscleRouter from "./routes/muscle.route";
 import registerRouter from "./routes/register.route";
 import loginRouter from "./routes/login.route";
+import forgetPasswordRouter from "./routes/forget-password.route";
 
 const app = express();
 app.use(bodyParser.json());
@@ -21,5 +22,6 @@ app.use("/exercise", exerciseRouter);
 app.use("/muscle", muscleRouter);
 app.use("/register", registerRouter);
 app.use("/login", loginRouter);
+app.use("/forget-password", forgetPasswordRouter);
 
 export default app;
