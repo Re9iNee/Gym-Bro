@@ -15,24 +15,26 @@ vi.mock("resend", () => {
 const resend = new Resend();
 
 describe("Email Service", () => {
-  it("should send the email", async () => {
-    // Arrange
-    const resolvedValue: CreateEmailResponse = {
-      data: { id: "71cdfe68-cf79-473a-a9d7-21f91db6a526" },
-      error: null,
-    };
-    resend.emails.send = vi.fn().mockResolvedValueOnce(resolvedValue);
+  describe("reset password email", () => {
+    it("should call resend function", async () => {
+      const resolvedValue: CreateEmailResponse = {
+        data: { id: "71cdfe68-cf79-473a-a9d7-21f91db6a526" },
+        error: null,
+      };
+      resend.emails.send = vi.fn().mockResolvedValueOnce(resolvedValue);
 
-    // Act
-    const response = await emailService.sendEmail({
-      to: "",
-      subject: "",
-      text: "",
-    });
+      // Act
+      const response = await emailService.sendResetPasswordEmail({
+        resend,
+        to: "a@a.com",
+        token: "token",
+      });
 
-    // Assert
-    expect(response).toMatchObject({
-      id: "71cdfe68-cf79-473a-a9d7-21f91db6a526",
+      // Assert
+      expect(resend.emails.send).toHaveBeenCalledOnce();
+      expect(response).toMatchObject({
+        emailId: "71cdfe68-cf79-473a-a9d7-21f91db6a526",
+      });
     });
   });
 });

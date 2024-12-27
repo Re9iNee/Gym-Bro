@@ -52,7 +52,7 @@ model User {
   phone            String?
   avatar           String?
   resetToken       String?
-  resetTokenExpiry Int?
+  resetTokenExpiry DateTime?
   fav_exercises    Exercise[]
 }
 

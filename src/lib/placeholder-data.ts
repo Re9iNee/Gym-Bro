@@ -146,4 +146,21 @@ export const users: ServerUser[] = [
     avatar: "https://avatars.githubusercontent.com/u/139426",
     password: "$2a$12$OLnhTua6fh7zc9zc/2si7eKstW8GeVn6HIFKVP7EZcDPlbgxEnoRu", // hash of "pa55W0rd"
   },
+  {
+    id: 2,
+    age: 27,
+    weight: 84,
+    height: 176,
+    gender: "Male",
+    name: "Reza Attarzadeh",
+    resetToken: null,
+    username: "rez.att",
+    phone: "123-456-7890",
+    resetTokenExpiry: null,
+    goals: ["WEIGHT_LOSS"],
+    email: "attarzadeh76@gmail.com",
+    birthday: new Date("1994-07-11"),
+    avatar: "https://avatars.githubusercontent.com/u/139426",
+    password: "$2a$12$OLnhTua6fh7zc9zc/2si7eKstW8GeVn6HIFKVP7EZcDPlbgxEnoRu", // hash of "pa55W0rd"
+  },
 ];

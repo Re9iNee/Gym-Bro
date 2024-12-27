@@ -90,7 +90,7 @@ describe("Forget Password Route", () => {
       where: { email: request.email },
       data: {
         resetToken: tokenMock,
-        resetTokenExpiry: expect.any(Number),
+        resetTokenExpiry: expect.any(Date),
       },
     });
   });
@@ -103,17 +103,17 @@ describe("Forget Password Route", () => {
     prisma.user.findUniqueOrThrow.mockResolvedValueOnce(validUser);
     const tokenMock = Buffer.from("a".repeat(32)).toString("hex");
     vi.spyOn(utils, "generateToken").mockReturnValueOnce(tokenMock);
-    const sendEmail = vi.spyOn(emailService, "sendEmail");
+    const sendEmail = vi.spyOn(emailService, "sendResetPasswordEmail");
 
     // Act
     await requestFn(app).post("/forget-password").send(request);
 
+    // Assert
+    expect(sendEmail).toHaveBeenCalledOnce();
     expect(sendEmail).toHaveBeenCalledWith({
       token: tokenMock,
       to: request.email,
-      type: "reset-password",
     });
-    expect(sendEmail).toHaveBeenCalledOnce();
   });
 });
 
