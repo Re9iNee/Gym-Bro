@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import requestFn from "supertest";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import app from "../app";
 import prisma from "../database/__mocks__/prisma";
 import { users } from "../lib/placeholder-data";
@@ -12,31 +12,78 @@ vi.mock("../database/prisma");
 const validUser = users[0];
 
 describe("Forget Password Route", () => {
-  it("should send an email to the user with a link to reset the password", async () => {
+  describe("Success", () => {
     const request = {
       email: "john.doe@example.com",
     };
-    prisma.user.findUniqueOrThrow.mockResolvedValueOnce(validUser);
+    beforeEach(() => {
+      vi.restoreAllMocks();
 
-    const response = await requestFn(app)
-      .post("/forget-password")
-      .send(request);
+      prisma.user.findUniqueOrThrow.mockResolvedValueOnce(validUser);
+      prisma.user.update.mockResolvedValue(validUser);
+      vi.spyOn(emailService, "sendResetPasswordEmail").mockResolvedValueOnce({
+        emailId: "1",
+      });
+    });
 
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual({ message: "Email sent", data: null });
-  });
+    it("should send an email to the user with a link to reset the password", async () => {
+      const response = await requestFn(app)
+        .post("/forget-password")
+        .send(request);
 
-  it("should check if email exists in the database", async () => {
-    const request = {
-      email: "john.doe@example.com",
-    };
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({ message: "Email sent", data: null });
+    });
 
-    prisma.user.findUniqueOrThrow.mockResolvedValueOnce(validUser);
+    it("should check if email exists in the database", async () => {
+      await requestFn(app).post("/forget-password").send(request);
 
-    await requestFn(app).post("/forget-password").send(request);
+      expect(prisma.user.findUniqueOrThrow).toHaveBeenCalledWith({
+        where: { email: request.email },
+      });
+    });
 
-    expect(prisma.user.findUniqueOrThrow).toHaveBeenCalledWith({
-      where: { email: request.email },
+    it("should create a token", async () => {
+      const generateToken = vi.spyOn(utils, "generateToken");
+
+      await requestFn(app).post("/forget-password").send(request);
+
+      expect(generateToken).toHaveBeenCalledOnce();
+    });
+
+    it("should store the hashed token in the database for the same user", async () => {
+      // Arrange
+      const tokenMock = Buffer.from("a".repeat(32)).toString("hex");
+      vi.spyOn(utils, "generateToken").mockReturnValueOnce(tokenMock);
+
+      // Act
+      await requestFn(app).post("/forget-password").send(request);
+
+      // Assert
+      expect(prisma.user.update).toHaveBeenCalledWith({
+        where: { email: request.email },
+        data: {
+          resetToken: tokenMock,
+          resetTokenExpiry: expect.any(Date),
+        },
+      });
+    });
+
+    it("should call the email service to send an email", async () => {
+      // Arrange
+      const tokenMock = Buffer.from("a".repeat(32)).toString("hex");
+      vi.spyOn(utils, "generateToken").mockReturnValueOnce(tokenMock);
+      const sendEmail = vi.spyOn(emailService, "sendResetPasswordEmail");
+
+      // Act
+      await requestFn(app).post("/forget-password").send(request);
+
+      // Assert
+      expect(sendEmail).toHaveBeenCalledOnce();
+      expect(sendEmail).toHaveBeenCalledWith({
+        token: tokenMock,
+        to: request.email,
+      });
     });
   });
 
@@ -58,61 +105,6 @@ describe("Forget Password Route", () => {
     expect(response.body).toEqual({
       message: "error",
       error: "User not found",
-    });
-  });
-
-  it("should create a token", async () => {
-    const request = {
-      email: "john.doe@example.com",
-    };
-    prisma.user.findUniqueOrThrow.mockResolvedValueOnce(validUser);
-    const generateToken = vi.spyOn(utils, "generateToken");
-
-    await requestFn(app).post("/forget-password").send(request);
-
-    expect(generateToken).toHaveBeenCalledOnce();
-  });
-
-  it("should store the hashed token in the database for the same user", async () => {
-    // Arrange
-    const request = {
-      email: "john.doe@example.com",
-    };
-    const tokenMock = Buffer.from("a".repeat(32)).toString("hex");
-    vi.spyOn(utils, "generateToken").mockReturnValueOnce(tokenMock);
-    prisma.user.findUniqueOrThrow.mockResolvedValueOnce(validUser);
-
-    // Act
-    await requestFn(app).post("/forget-password").send(request);
-
-    // Assert
-    expect(prisma.user.update).toHaveBeenCalledWith({
-      where: { email: request.email },
-      data: {
-        resetToken: tokenMock,
-        resetTokenExpiry: expect.any(Date),
-      },
-    });
-  });
-
-  it("should call the email service to send an email", async () => {
-    // Arrange
-    const request = {
-      email: "john.doe@example.com",
-    };
-    prisma.user.findUniqueOrThrow.mockResolvedValueOnce(validUser);
-    const tokenMock = Buffer.from("a".repeat(32)).toString("hex");
-    vi.spyOn(utils, "generateToken").mockReturnValueOnce(tokenMock);
-    const sendEmail = vi.spyOn(emailService, "sendResetPasswordEmail");
-
-    // Act
-    await requestFn(app).post("/forget-password").send(request);
-
-    // Assert
-    expect(sendEmail).toHaveBeenCalledOnce();
-    expect(sendEmail).toHaveBeenCalledWith({
-      token: tokenMock,
-      to: request.email,
     });
   });
 });

@@ -37,7 +37,6 @@ router.post("/", async (req: Request, res) => {
     res.status(200);
     return res.json({ message: "Email sent", data: null });
   } catch (e) {
-    console.error(e);
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       if (e.code === "P2025") {
         res.status(404);
