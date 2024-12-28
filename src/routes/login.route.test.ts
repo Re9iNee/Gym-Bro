@@ -1,20 +1,30 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import requestFn from "supertest";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import app from "../app";
 import prisma from "../database/__mocks__/prisma";
 import { users } from "../lib/placeholder-data";
+import * as bcryptjs from "bcryptjs";
 
 vi.mock("../database/prisma");
+
+vi.mock("bcryptjs", () => {
+  return {
+    compare: vi.fn(), // Mock resolved value
+  };
+});
 
 const validUser = users[0];
 const validPassword = "pa55W0rd";
 
 describe("Login Route", () => {
+  const mockedCompare = bcryptjs.compare as Mock;
   describe("Success", () => {
     beforeEach(async () => {
       vi.restoreAllMocks();
+
       prisma.user.findUniqueOrThrow.mockResolvedValueOnce(validUser);
+      mockedCompare.mockResolvedValueOnce(true);
     });
     it("should return 200", async () => {
       const request = {
@@ -57,6 +67,9 @@ describe("Login Route", () => {
   });
 
   describe("Failure", () => {
+    beforeEach(async () => {
+      vi.restoreAllMocks();
+    });
     it("should return 404 if user is not found", async () => {
       // Arrange
       const error = new PrismaClientKnownRequestError(
@@ -92,6 +105,7 @@ describe("Login Route", () => {
         email: validUser.email,
       };
       prisma.user.findUniqueOrThrow.mockResolvedValueOnce(validUser);
+      mockedCompare.mockResolvedValueOnce(false);
 
       // Act
       const response = await requestFn(app).post("/login").send(request);

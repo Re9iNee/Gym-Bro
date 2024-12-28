@@ -7,6 +7,7 @@ describe("App Utils", () => {
   it("should hash the given password", async () => {
     // Arrange
     const plaintextPassword = "password";
+
     // Act
     const hash = await hashPassword(plaintextPassword);
 
