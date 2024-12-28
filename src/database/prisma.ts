@@ -1,9 +1,10 @@
 import { PrismaClient } from "@prisma/client";
+import { POSTGRES_PRISMA_URL } from "../lib/constants";
 
 const prisma = new PrismaClient({
   datasources: {
     db: {
-      url: process.env.POSTGRES_PRISMA_URL,
+      url: POSTGRES_PRISMA_URL,
     },
   },
 });

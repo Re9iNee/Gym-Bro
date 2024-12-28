@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { Resend } from "resend";
-import { CLIENT_URL } from "../lib/constants";
+import { CLIENT_URL, RESEND_API_KEY } from "../lib/constants";
 
 type ResetPasswordEmailParams = {
   token: string;
@@ -22,7 +22,7 @@ async function sendResetPasswordEmail({
   resend,
 }: ResetPasswordEmailParams): ResetPasswordResponse {
   if (!resend) {
-    resend = new Resend(process.env.RESEND_API_KEY);
+    resend = new Resend(RESEND_API_KEY);
   }
 
   try {
