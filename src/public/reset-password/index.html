@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // Function to get query parameters
+      function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+      }
+
+      // Populate the input field with the query parameter value
+      window.onload = () => {
+        const inputField = document.getElementById("token");
+        const paramValue = getQueryParam("token");
+        if (!paramValue) {
+          console.log("invalid token");
+          // alert("Token is required");
+        }
+        if (paramValue) {
+          inputField.value = paramValue;
+        }
+      };
+    </script>
+  </head>
+  <body class="bg-gray-100 h-screen text-center flex flex-col justify-center">
+    <form
+      action="reset-password"
+      method="post"
+      class="bg-white p-6 mx-auto rounded-lg flex flex-col gap-4 min-w-[400px]"
+    >
+      <h1 class="text-lg font-bold">Reset Your Password</h1>
+
+      <input type="text" name="token" placeholder="Token" hidden />
+      <input
+        type="password"
+        name="password"
+        placeholder="Password"
+        class="border p-4 rounded-lg"
+      />
+      <input
+        class="border p-4 rounded-lg"
+        type="password"
+        name="confirm_password"
+        placeholder="Confirm Password"
+      />
+      <button
+        type="submit"
+        class="border rounded-lg py-3 bg-neutral-900 text-white"
+      >
+        Reset Password
+      </button>
+    </form>
+  </body>
+</html>
