@@ -3,6 +3,14 @@ import crypto from "crypto";
 import { describe, expect, it, vi } from "vitest";
 import { generateToken, hashPassword } from "./app.utils";
 
+vi.mock("crypto", async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...(actual as any),
+    randomBytes: vi.fn(),
+  };
+});
+
 describe("App Utils", () => {
   it("should hash the given password", async () => {
     // Arrange
@@ -13,14 +21,6 @@ describe("App Utils", () => {
 
     // Assert
     expect(await compare(plaintextPassword, hash)).toBe(true);
-  });
-
-  vi.mock("crypto", async (importOriginal) => {
-    const actual = await importOriginal();
-    return {
-      ...(actual as any),
-      randomBytes: vi.fn(),
-    };
   });
 
   describe("should generate token", () => {
