@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 const bodyParser = require("body-parser");
 
+import changePasswordRouter from "./routes/change-password.route";
 import dailyTipRouter from "./routes/daily-tip.route";
 import difficultyRouter from "./routes/difficulty.route";
 import exerciseRouter from "./routes/exercise.route";
@@ -25,5 +26,6 @@ app.use("/register", registerRouter);
 app.use("/login", loginRouter);
 app.use("/forget-password", forgetPasswordRouter);
 app.use("/reset-password/", resetPasswordRouter);
+app.use("/change-password", changePasswordRouter);
 
 export default app;
