@@ -107,18 +107,20 @@ describe("Forget Password Route", () => {
       error: "User not found",
     });
   });
+
+  it("should throw an error if email is invalid or missing", async () => {
+    const request = {
+      email: "wrong-email.com",
+    };
+
+    const response = await requestFn(app)
+      .post("/forget-password")
+      .send(request);
+
+    expect(response.status).toBe(400);
+    expect(response.body).toMatchObject({
+      message: "error",
+      error: "Missing or invalid email",
+    });
+  });
 });
-
-// SEND EMAIL
-// user exists
-// create a token
-// store the hashed token in the database
-// token expires in 1 hour
-// send an email to the user with a link to reset the password (token included in the link)
-
-// RESET PASSWORD
-// user clicks the link (token included in the link)
-// check if token is valid
-// check if token is expired
-// update the user's password
-// delete the token from the database

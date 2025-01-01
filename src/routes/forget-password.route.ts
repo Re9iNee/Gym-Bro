@@ -37,6 +37,12 @@ router.post("/", async (req: Request, res) => {
     res.status(200);
     return res.json({ message: "Email sent", data: null });
   } catch (e) {
+    if (e instanceof z.ZodError) {
+      console.log(e.issues);
+      return res
+        .status(400)
+        .json({ message: "error", error: "Missing or invalid email" });
+    }
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       if (e.code === "P2025") {
         res.status(404);
