@@ -28,8 +28,7 @@
   </head>
   <body class="bg-gray-100 h-screen text-center flex flex-col justify-center">
     <form
-      action="reset-password"
-      method="post"
+      id="reset-password-form"
       class="bg-white p-6 mx-auto rounded-lg flex flex-col gap-4 min-w-[400px]"
     >
       <h1 class="text-lg font-bold">Reset Your Password</h1>
@@ -42,9 +41,9 @@
         class="border p-4 rounded-lg"
       />
       <input
-        class="border p-4 rounded-lg"
         type="password"
         name="confirm_password"
+        class="border p-4 rounded-lg"
         placeholder="Confirm Password"
       />
       <button
@@ -55,4 +54,58 @@
       </button>
     </form>
   </body>
+  <script>
+    document
+      .getElementById("reset-password-form")
+      .addEventListener("submit", async (event) => {
+        event.preventDefault(); // Prevent the default form submission behavior
+
+        // Get form inputs
+        const password = event.target.password.value;
+        const confirmPassword = event.target.confirm_password.value;
+
+        // Validate that both password fields match
+        if (password !== confirmPassword) {
+          alert("Passwords do not match. Please try again.");
+          return;
+        }
+
+        // Get the token from the URL query parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get("token");
+
+        if (!token) {
+          alert("Token not found in the URL.");
+          return;
+        }
+
+        // Construct the payload
+        const payload = {
+          password,
+        };
+
+        try {
+          // Make the fetch POST request
+          const response = await fetch(`/change-password?token=${token}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          });
+
+          // Handle the response
+          if (response.ok) {
+            alert("Password reset successfully!");
+            window.location.href = "/";
+          } else {
+            const errorData = await response.json();
+            alert(`Error: ${errorData.message || "Something went wrong."}`);
+          }
+        } catch (error) {
+          console.error("Error resetting password:", error);
+          alert("An unexpected error occurred. Please try again.");
+        }
+      });
+  </script>
 </html>
