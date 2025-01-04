@@ -11,6 +11,7 @@ import loginRouter from "./routes/login.route";
 import muscleRouter from "./routes/muscle.route";
 import registerRouter from "./routes/register.route";
 import resetPasswordRouter from "./routes/reset-password.route";
+import enumsRouter from "./routes/enums.route";
 
 const app = express();
 app.use(bodyParser.json());
@@ -29,5 +30,6 @@ app.use("/forget-password", forgetPasswordRouter);
 app.use("/reset-password/", resetPasswordRouter);
 app.use("/change-password", changePasswordRouter);
 app.use("/equipment", equipmentRouter);
+app.use("/enums", enumsRouter);
 
 export default app;

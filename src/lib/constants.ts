@@ -1,3 +1,5 @@
+import { Difficulty, Equipment, Focus, Goal, Muscle } from "@prisma/client";
+
 require("dotenv").config();
 
 if (process.env.NODE_ENV === "production" && !process.env.VERCEL_URL) {
@@ -17,3 +19,5 @@ if (!process.env.POSTGRES_PRISMA_URL) {
 }
 
 export const POSTGRES_PRISMA_URL = process.env.POSTGRES_PRISMA_URL;
+
+export const ENUMS = { Muscle, Goal, Difficulty, Equipment, Focus } as const;
