@@ -38,7 +38,6 @@ router.post("/", async (req: Request, res) => {
     return res.json({ message: "Email sent", data: null });
   } catch (e) {
     if (e instanceof z.ZodError) {
-      console.log(e.issues);
       return res
         .status(400)
         .json({ message: "error", error: "Missing or invalid email" });
