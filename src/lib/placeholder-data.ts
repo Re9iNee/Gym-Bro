@@ -179,6 +179,7 @@ export const routines: RoutineWithFields[] = [
     id: 6,
     name: "My main workout",
     goal: ["WEIGHT_LOSS", "FLEXIBILITY", "POWER"],
+    muscle: ["ABS", "BICEPS", "TRICEPS"],
     notes:
       "i ve added this routine to gain performance to satisfy Armans aunt in bed",
     renewalDate: justADate,
