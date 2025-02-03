@@ -1,4 +1,5 @@
 import {
+  Prisma,
   DailyTip as ServerDailyTip,
   Exercise as ServerExercise,
   User as ServerUser,
@@ -162,5 +163,59 @@ export const users: ServerUser[] = [
     birthday: new Date("1994-07-11"),
     avatar: "https://avatars.githubusercontent.com/u/139426",
     password: "$2a$12$OLnhTua6fh7zc9zc/2si7eKstW8GeVn6HIFKVP7EZcDPlbgxEnoRu", // hash of "pa55W0rd"
+  },
+];
+
+type RoutineWithFields = Prisma.RoutineGetPayload<{
+  include: {
+    users: true;
+    days: { include: { exercises: true } };
+  };
+}>;
+
+const justADate = "2025-01-04T18:03:11.581Z" as unknown as Date;
+export const routines: RoutineWithFields[] = [
+  {
+    id: 6,
+    name: "My main workout",
+    goal: ["WEIGHT_LOSS", "FLEXIBILITY", "POWER"],
+    notes:
+      "i ve added this routine to gain performance to satisfy Armans aunt in bed",
+    renewalDate: justADate,
+    users: [
+      {
+        id: 2,
+        isCreator: true,
+        joinedAt: justADate,
+        userId: 21,
+        routineId: 6,
+      },
+      {
+        id: 3,
+        isCreator: false,
+        joinedAt: justADate,
+        userId: 22,
+        routineId: 6,
+      },
+    ],
+    days: [
+      {
+        id: 6,
+        avgTime: 65,
+        note: "FIRST DAY LETS GO",
+        day: "MONDAY",
+        routineId: 6,
+        exercises: [
+          {
+            id: 6,
+            sets: 7,
+            reps: 10,
+            rest: 60,
+            exerciseId: 9,
+            routineDayId: 6,
+          },
+        ],
+      },
+    ],
   },
 ];

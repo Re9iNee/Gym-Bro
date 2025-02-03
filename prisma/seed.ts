@@ -1,11 +1,20 @@
+import { writeFile, writeFileSync } from "node:fs";
 import prisma from "../src/database/prisma";
-import { dailyTips, exercises, users } from "../src/lib/placeholder-data";
+import {
+  dailyTips,
+  exercises,
+  routines,
+  users,
+} from "../src/lib/placeholder-data";
+import { Goal } from "@prisma/client";
 
 async function main() {
+  await playground();
   await clearDB();
   await seedDailyTips();
   await seedExercises();
   await seedUsers();
+  await seedRoutines();
   await prisma.$disconnect();
 }
 
@@ -15,6 +24,27 @@ main().catch((err) => {
     err
   );
 });
+
+async function seedRoutines() {
+  const formattedRoutines = routines.map((routine) => ({
+    ...routine,
+    id: undefined,
+    goal: { set: routine.goal },
+    days: {
+      create: routine.days.map((day) => ({
+        ...day,
+        exercises: { create: day.exercises },
+      })),
+    },
+  }));
+
+  const rows = await prisma.routine.createMany({ data: formattedRoutines });
+  console.log(`🌱 Seeded ${rows.count} routines`);
+}
+
+async function playground() {
+  console.log("Ran 🎮 Playground");
+}
 
 async function seedUsers() {
   const formattedUsers = users.map((user) => ({

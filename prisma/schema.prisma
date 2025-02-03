@@ -35,12 +35,14 @@ model Exercise {
   alternate_names String[]
   difficulty      Difficulty
   equipments      Equipment[]
+
+  RoutineDayExercise RoutineDayExercise[]
 }
 
 model User {
-  id               Int        @id @default(autoincrement())
-  username         String     @unique
-  email            String     @unique
+  id               Int       @id @default(autoincrement())
+  username         String    @unique
+  email            String    @unique
   weight           Float?
   height           Float?
   name             String?
@@ -51,9 +53,69 @@ model User {
   age              Int?
   phone            String?
   avatar           String?
-  resetToken       String?    @unique
+  resetToken       String?   @unique
   resetTokenExpiry DateTime?
-  fav_exercises    Exercise[]
+
+  fav_exercises Exercise[]
+  routines      UserRoutine[]
+}
+
+model Routine {
+  id          Int      @id @default(autoincrement())
+  name        String
+  goal        Goal[]
+  muscle      Muscle[]
+  notes       String?
+  renewalDate DateTime
+
+  days  RoutineDay[]
+  users UserRoutine[]
+}
+
+model UserRoutine {
+  id        Int      @id @default(autoincrement())
+  isCreator Boolean  @default(false)
+  joinedAt  DateTime @default(now())
+
+  userId    Int
+  routineId Int
+  user      User    @relation(fields: [userId], references: [id])
+  routine   Routine @relation(fields: [routineId], references: [id])
+}
+
+model RoutineDay {
+  id      Int     @id @default(autoincrement())
+  avgTime Int?
+  note    String?
+  day     WEEKDAY
+
+  routineId Int
+  exercises RoutineDayExercise[]
+  routine   Routine              @relation(fields: [routineId], references: [id])
+
+  @@unique([routineId, day]) // Ensures unique days within the same routine
+}
+
+model RoutineDayExercise {
+  id   Int @id @default(autoincrement())
+  sets Int
+  reps Int
+  rest Int
+
+  exerciseId   Int
+  routineDayId Int
+  exercise     Exercise   @relation(fields: [exerciseId], references: [id])
+  routineDay   RoutineDay @relation(fields: [routineDayId], references: [id])
+}
+
+enum WEEKDAY {
+  SATURDAY
+  SUNDAY
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
 }
 
 enum Difficulty {
