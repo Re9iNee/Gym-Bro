@@ -18,6 +18,10 @@ router.get("/", async (req: Request, res: getAllRoutineResponse) => {
 
     const routines = await prisma.routine.findMany({
       include: { users: true, days: { include: { exercises: true } } },
+      where: {
+        users: { some: { id: query.userId } },
+        days: { some: { day: query.day } },
+      },
     });
 
     res.status(200).json({ message: "OK", data: routines });

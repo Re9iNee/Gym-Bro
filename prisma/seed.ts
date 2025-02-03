@@ -1,4 +1,3 @@
-import { writeFile, writeFileSync } from "node:fs";
 import prisma from "../src/database/prisma";
 import {
   dailyTips,
@@ -6,7 +5,6 @@ import {
   routines,
   users,
 } from "../src/lib/placeholder-data";
-import { Goal } from "@prisma/client";
 
 async function main() {
   await playground();
