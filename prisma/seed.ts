@@ -1,3 +1,5 @@
+import { writeFileSync } from "fs";
+import { Goal, Muscle, Prisma, PrismaClient } from "@prisma/client";
 import prisma from "../src/database/prisma";
 import {
   dailyTips,
@@ -7,7 +9,7 @@ import {
 } from "../src/lib/placeholder-data";
 
 async function main() {
-  await playground();
+  // await playground();
   await clearDB();
   await seedDailyTips();
   await seedExercises();
@@ -22,23 +24,6 @@ main().catch((err) => {
     err
   );
 });
-
-async function seedRoutines() {
-  const formattedRoutines = routines.map((routine) => ({
-    ...routine,
-    id: undefined,
-    goal: { set: routine.goal },
-    days: {
-      create: routine.days.map((day) => ({
-        ...day,
-        exercises: { create: day.exercises },
-      })),
-    },
-  }));
-
-  const rows = await prisma.routine.createMany({ data: formattedRoutines });
-  console.log(`🌱 Seeded ${rows.count} routines`);
-}
 
 async function playground() {
   console.log("Ran 🎮 Playground");
@@ -89,4 +74,31 @@ async function clearDB() {
   await prisma.$transaction([deletedDailyTip, deletedExercise, deletedUser]);
 
   console.log("✅ DB cleared!");
+}
+
+async function seedRoutines() {
+  const foundUser = await prisma.user.findFirst({ select: { id: true } });
+
+  await prisma.routine.create({
+    data: {
+      name: "My First Routine",
+      goal: { set: [Goal.MUSCLE_GAIN, Goal.ENDURANCE] },
+      muscle: { set: [Muscle.LOWER_BACK] },
+      users: { create: { userId: foundUser?.id!, isCreator: true } },
+      days: {
+        create: {
+          day: "MONDAY",
+        },
+      },
+      notes:
+        "i ve added this routine to gain performance to satisfy Armans aunt in bed",
+      renewalDate: new Date("2025-01-04T18:03:11.581Z"),
+    },
+    include: {
+      users: true,
+      days: { include: { exercises: true } },
+    },
+  });
+
+  console.log(`🌱 Seeded 1 routine`);
 }

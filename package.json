@@ -11,7 +11,7 @@
     "test": "vitest",
     "seed": "npx prisma db seed",
     "start": "npm run build && node dist/src/index.js",
-    "postinstall": "prisma generate && npx prisma db seed"
+    "postinstall": "prisma generate && npx prisma db push --force-reset && npx prisma db seed"
   },
   "author": "Reza Attarzadeh",
   "keywords": [
